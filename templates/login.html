@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enerlites Data Portal</title>
+    <style>
+        /* div {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 30vh;
+        } */
+
+        h1 {
+            text-align: center;
+            margin-top: 120px;
+            color: rgba(61, 17, 82, 1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin: 0 auto;
+        }
+
+        form {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: rgba(61, 17, 82, 1);
+            color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: rgba(61, 17, 82, 1);
+        }
+
+        p.error {
+            color: red;
+            text-align: center;
+            margin: 0;
+            /* margin-bottom: 5px; */
+        }
+
+        h5 {
+            text-align: center;
+        }
+
+        h6 {
+            text-align: center;
+            /* text-align: justify; */
+            width: 900px;
+            margin: 0 auto;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%); /* Centers the element horizontally */
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Enerlites Data Portal</h1>
+
+<div>        
+    <form method="post" action="/login">
+        <h2>Login</h2>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <input type="submit" value="Login">
+
+        <!-- Display the error message if it exists -->
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+    </form>
+    <h5>© 2024 Enerlites, Inc. All rights reserved.</h5>
+    <h6>Please be advised that the information contained on this website is intended solely for internal use and should not be shared with any external parties. We ask our users to respect the confidentiality of this information and to refrain from distributing it outside of our organization. Access to this portal is limited to authorized users only. Unauthorized dissemination or use of this information may lead to disciplinary action, including termination of employment, and could have legal consequences.  Users are responsible for ensuring that the information obtained from this portal is used in a manner consistent with its intended purpose and in compliance with Enerlites’ policies and relevant laws and regulations. Enerlites provides this portal and its contents on an "as is" basis and does not make any representations or warranties, express or implied, regarding the accuracy, completeness, or fitness for a particular purpose of the information available through this portal. The company does not warrant that access to the portal will be uninterrupted or error-free. Your cooperation in maintaining the privacy and integrity of our internal resources is greatly appreciated. </h6>
+</div>
+</body>
+</html>

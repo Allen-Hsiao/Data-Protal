@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Files</title>
+    <style>
+        h1 {
+            text-align: center;
+            margin-top: 70px;
+            color: rgba(61, 17, 82, 1);
+        }
+
+        form {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+
+        select,
+        button {
+            font-family: 'Arial', sans-serif;
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+            height: 100%;
+        }
+
+        select#file_selector {
+            height: 200px; /* Adjust the height as needed */
+            overflow-y: scroll; /* Add a vertical scrollbar if the content overflows */
+        }
+
+        button {
+            background-color: rgba(61, 17, 82, 1);
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgba(61, 17, 82, 1);
+        }
+
+        h5 {
+            text-align: center;
+        }
+
+        h4{
+            text-align: center;
+        }
+
+        h6 {
+            text-align: center;
+            /* text-align: justify; */
+            width: 900px;
+            margin: 0 auto;
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%); /* Centers the element horizontally */
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Files</h1>
+    
+    <form id="downloadForm" method="get">
+        <label for="folder_selector">Select Folder:</label>
+        <select id="folder_selector" name="folder">
+            <option value="--">---</option> <!-- Default folder option -->
+            {% for folder in folders %}
+                <option value="{{ folder }}">{{ folder }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="file_selector">Select one or more files:</label>
+        <input type="text" id="search_box" placeholder="Search files...">
+        <select id="file_selector" name="filename" multiple>
+            {% for file in files %}
+                <!-- <option value="{{ file }}">{{ file }}</option> -->
+                <div>
+                    <input type="checkbox" class="file-checkbox" name="selected_files" value="{{ file }}">
+                    <label>{{ file }} </label>
+                </div>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="button" onclick="downloadFiles()">Download</button>
+        <h4 style="margin: 0;">Logged in as {{ session["username"] }} | <a href="{{ url_for('logout') }}">Logout</a></h4>
+    </form>
+    <h5>© 2024 Enerlites, Inc. All rights reserved.</h5>
+    <h6>Please be advised that the information contained on this website is intended solely for internal use and should not be shared with any external parties. We ask our users to respect the confidentiality of this information and to refrain from distributing it outside of our organization. Access to this portal is limited to authorized users only. Unauthorized dissemination or use of this information may lead to disciplinary action, including termination of employment, and could have legal consequences.  Users are responsible for ensuring that the information obtained from this portal is used in a manner consistent with its intended purpose and in compliance with Enerlites’ policies and relevant laws and regulations. Enerlites provides this portal and its contents on an "as is" basis and does not make any representations or warranties, express or implied, regarding the accuracy, completeness, or fitness for a particular purpose of the information available through this portal. The company does not warrant that access to the portal will be uninterrupted or error-free. Your cooperation in maintaining the privacy and integrity of our internal resources is greatly appreciated. </h6>
+
+    <script>
+        function downloadFiles() {
+            var folder = document.getElementById('folder_selector').value;
+            var selectedFiles = Array.from(document.getElementById('file_selector').selectedOptions).map(option => option.value);
+
+            // Loop through selected files and initiate download for each
+            selectedFiles.forEach(function(file) {
+                var downloadUrl = "{{ url_for('download_files', folder='', filename='') }}" + folder + '/' + file;
+                var link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = file;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        }
+
+        function filterFiles() {
+            var input, filter, fileSelector, option, i;
+            input = document.getElementById('search_box');
+            filter = input.value.toLowerCase();
+            fileSelector = document.getElementById('file_selector');
+            option = fileSelector.getElementsByTagName('option');
+
+            for (i = 0; i < option.length; i++) {
+                if (option[i].text.toLowerCase().indexOf(filter) > -1) {
+                    option[i].style.display = "";
+                } else {
+                    option[i].style.display = "none";
+                }
+            }
+        }
+
+
+        document.getElementById('search_box').addEventListener('keyup', function() {
+            var searchTerm = this.value.toLowerCase();
+            var files = document.getElementById('file_selector').options;
+
+            for (var i = 0; i < files.length; i++) {
+                var filename = files[i].text.toLowerCase();
+                files[i].style.display = filename.includes(searchTerm) ? '' : 'none';
+            }
+        });
+
+
+        // JavaScript to populate file options based on selected folder(s)
+        document.getElementById('folder_selector').addEventListener('change', function() {
+            var folder = this.value;
+            var fileSelector = document.getElementById('file_selector');
+            
+            // Clear existing options
+            fileSelector.innerHTML = '';
+
+            // Fetch file list for the selected folder(s)
+            if (folder !== '--') {
+                fetch('/get_files/' + folder)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Populate file options
+                        data.files.forEach(file => {
+                            var option = document.createElement('option');
+                            option.value = file;
+                            option.text = file;
+                            fileSelector.add(option);
+                        });
+                    });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        p.message {
+            color: rgb(22, 23, 24);
+            margin-top: 50px;
+            /* text-align: center; */
+        }
+    </style>
+</head>
+<body>
+    <!-- Display the error message if it exists -->
+    {% if message %}
+        <p class="message">{{ message }}</p>
+    {% endif %}
+
+</body>
+</html>
